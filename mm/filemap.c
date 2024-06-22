@@ -47,6 +47,10 @@
 #include <trace/events/tracing_mark_write.h>
 #include "internal.h"
 
+#ifdef CONFIG_DDAR
+#include <ddar/cache_cleanup.h>
+#endif
+
 #ifdef CONFIG_PAGE_BOOST_RECORDING
 #include <linux/io_record.h>
 #endif
@@ -232,6 +236,11 @@ static void unaccount_page_cache_page(struct address_space *mapping,
 void __delete_from_page_cache(struct page *page, void *shadow)
 {
 	struct address_space *mapping = page->mapping;
+
+#ifdef CONFIG_DDAR
+	if (mapping_sensitive(mapping))
+		sdp_page_cleanup(page);
+#endif
 
 	trace_mm_filemap_delete_from_page_cache(page);
 

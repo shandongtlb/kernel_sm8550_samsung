@@ -806,7 +806,6 @@ retry:
 				sec_avc_log("%s\n", data);
 #endif
 // ] SEC_SELINUX_PORTING_COMMON
-			/* it worked - drop the extra reference and continue */
 			/* skb sent - drop the extra reference and continue */
 			consume_skb(skb);
 			failed = 0;

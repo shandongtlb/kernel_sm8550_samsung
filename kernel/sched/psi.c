@@ -151,6 +151,10 @@
 #include <linux/psi.h>
 #include "sched.h"
 
+#ifdef CONFIG_PROC_FSLOG
+#include <linux/fslog.h>
+#endif
+
 static int psi_bug __read_mostly;
 
 DEFINE_STATIC_KEY_FALSE(psi_disabled);
@@ -354,6 +358,11 @@ static void collect_percpu_times(struct psi_group *group,
 	int cpu;
 	int s;
 
+#ifdef CONFIG_PROC_PSI_LOG
+	char buf[1024];
+	int pos = 0;
+#endif
+
 	/*
 	 * Collect the per-cpu time buckets and average them into a
 	 * single time sample that is normalized to wallclock time.
@@ -376,7 +385,18 @@ static void collect_percpu_times(struct psi_group *group,
 
 		for (s = 0; s < PSI_NONIDLE; s++)
 			deltas[s] += (u64)times[s] * nonidle;
+
+#ifdef CONFIG_PROC_PSI_LOG
+		pos += sprintf(buf + pos, "%d,%d,", times[PSI_CPU_SOME] / 1000000,
+				jiffies_to_msecs(nonidle));
+#endif
 	}
+
+#ifdef CONFIG_PROC_PSI_LOG
+	if (aggregator == PSI_POLL) {
+		PSI_LOG("%s", buf);
+	}
+#endif
 
 	/*
 	 * Integrate the sample into the running statistics that are

@@ -371,3 +371,4 @@ extern int evdev_mt_slot;
 extern int evdev_mt_event[MAX_DEVICE_TYPE_NUM];
 
 #endif // _INPUT_BOOSTER_H_
+

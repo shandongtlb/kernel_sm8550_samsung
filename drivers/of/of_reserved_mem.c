@@ -303,6 +303,7 @@ void __init fdt_init_reserved_mem(void)
 
 		nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
 		reusable = of_get_flat_dt_prop(node, "reusable", NULL) != NULL;
+
 		prop = of_get_flat_dt_prop(node, "phandle", &len);
 		if (!prop)
 			prop = of_get_flat_dt_prop(node, "linux,phandle", &len);
